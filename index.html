@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SunChill Solar explores a household essential-load resilience approach centered on refrigerator backup power and solar offset, with internet and media-center support as a secondary focus.">
+<title>SunChill Solar — Essential-Load Resilience</title>
+<style>
+/* ── Reset & custom properties ──────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;
+  --near-black:#111111;
+  --surface:#161616;
+  --surface2:#1e1e1e;
+  --rule:#2a2a2a;
+  --chartreuse:#c8ff00;
+  --yellow:#ffe600;
+  --white:#f5f5f0;
+  --muted:#888;
+  --text:#e8e8e0;
+  --font-stack:'Arial Black','Arial Bold',Arial,'Helvetica Neue',Helvetica,sans-serif;
+  --font-sans:Arial,'Helvetica Neue',Helvetica,sans-serif;
+  --font-mono:'Courier New',Courier,monospace;
+  --max:1280px;
+  --gutter:clamp(1rem,4vw,3rem);
+  --transition:0.18s ease;
+}
+html{scroll-behavior:smooth;color-scheme:dark}
+body{
+  background:var(--black);
+  color:var(--text);
+  font-family:var(--font-sans);
+  font-size:clamp(0.9rem,1.2vw,1.05rem);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+}
+
+/* ── Skip link ────────────────────────────────────────────────────── */
+.skip-link{
+  position:fixed;top:-100px;left:1rem;z-index:9999;
+  background:var(--chartreuse);color:var(--black);
+  font-family:var(--font-stack);font-weight:900;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.5rem 1rem;text-decoration:none;
+}
+.skip-link:focus{top:1rem}
+
+/* ── Focus visible ────────────────────────────────────────────────── */
+:focus-visible{outline:2px solid var(--chartreuse);outline-offset:3px}
+
+/* ── Typography utils ─────────────────────────────────────────────── */
+.display{
+  font-family:var(--font-stack);
+  font-weight:900;
+  font-size:clamp(3.2rem,9vw,9rem);
+  line-height:.9;
+  letter-spacing:-.02em;
+  text-transform:uppercase;
+}
+.display-md{
+  font-family:var(--font-stack);
+  font-weight:900;
+  font-size:clamp(2rem,5vw,4.5rem);
+  line-height:.95;
+  letter-spacing:-.02em;
+  text-transform:uppercase;
+}
+.label{
+  font-family:var(--font-stack);
+  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:900;
+}
+.accent{color:var(--chartreuse)}
+.accent-y{color:var(--yellow)}
+.muted{color:var(--muted)}
+
+/* ── Layout ───────────────────────────────────────────────────────── */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1rem,3vw,3rem)}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2vw,2rem)}
+@media(max-width:860px){.grid-2{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid-3{grid-template-columns:1fr}}
+
+/* ── Rule line ────────────────────────────────────────────────────── */
+.h-rule{width:100%;height:1px;background:var(--rule);margin:0}
+.h-rule-accent{width:100%;height:2px;background:var(--chartreuse);margin:0}
+
+/* ── Nav ──────────────────────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--black);
+  border-bottom:1px solid var(--rule);
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem var(--gutter);max-width:var(--max);margin:0 auto;
+}
+.logo{
+  font-family:var(--font-stack);font-weight:900;font-size:1.15rem;
+  letter-spacing:-.01em;text-transform:uppercase;text-decoration:none;color:var(--white);
+  display:flex;align-items:center;gap:.45rem;
+}
+.logo-mark{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:1.6rem;height:1.6rem;
+  background:var(--chartreuse);
+}
+.logo-mark svg{width:1rem;height:1rem}
+.logo span{color:var(--chartreuse)}
+.nav-cta{
+  font-family:var(--font-stack);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;font-weight:900;
+  color:var(--black);background:var(--chartreuse);
+  padding:.45rem 1.1rem;text-decoration:none;
+  transition:background var(--transition),color var(--transition);
+}
+.nav-cta:hover,.nav-cta:focus-visible{background:var(--yellow);color:var(--black)}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+#hero{
+  position:relative;background:var(--near-black);
+  overflow:hidden;
+  border-bottom:1px solid var(--rule);
+  min-height:92vh;
+  display:grid;
+  grid-template-rows:1fr auto;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:end;
+  padding:clamp(3rem,8vh,7rem) var(--gutter) 0;
+  max-width:var(--max);margin:0 auto;width:100%;
+  gap:2rem;
+}
+.hero-left{padding-bottom:clamp(2rem,5vh,5rem)}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:.6rem;margin-bottom:1.5rem;
+}
+.hero-num{
+  font-family:var(--font-mono);font-size:.72rem;color:var(--chartreuse);
+  border:1px solid var(--chartreuse);padding:.1rem .4rem;
+}
+.hero-headline{margin-bottom:1.8rem}
+.hero-headline em{font-style:normal;color:var(--chartreuse)}
+.hero-sub{
+  font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.5;color:var(--text);
+  max-width:38ch;margin-bottom:2.5rem;
+}
+.hero-actions{display:flex;flex-wrap:wrap;gap:1rem;align-items:center}
+.btn-primary{
+  font-family:var(--font-stack);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;font-weight:900;
+  color:var(--black);background:var(--chartreuse);
+  padding:.75rem 2rem;text-decoration:none;display:inline-block;
+  transition:background var(--transition);
+}
+.btn-primary:hover,.btn-primary:focus-visible{background:var(--yellow)}
+.btn-ghost{
+  font-family:var(--font-stack);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:900;
+  color:var(--chartreuse);border:1px solid var(--chartreuse);
+  padding:.75rem 1.8rem;text-decoration:none;display:inline-block;
+  transition:background var(--transition),color var(--transition);
+}
+.btn-ghost:hover,.btn-ghost:focus-visible{background:var(--chartreuse);color:var(--black)}
+
+.hero-right{
+  position:relative;
+  align-self:stretch;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.hero-diagram{
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-bottom:none;
+  padding:2rem 2rem 0;
+  position:relative;
+}
+.diagram-label{
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.5rem;
+}
+.diag-svg-wrap{width:100%;max-width:420px;margin:0 auto}
+
+.hero-bar{
+  background:var(--surface2);border-top:1px solid var(--rule);
+  padding:1.2rem var(--gutter);
+}
+.hero-bar-inner{
+  max-width:var(--max);margin:0 auto;
+  display:flex;gap:2.5rem;flex-wrap:wrap;align-items:center;
+}
+.hero-stat{}
+.hero-stat-num{
+  font-family:var(--font-stack);font-weight:900;font-size:1.8rem;letter-spacing:-.02em;
+  color:var(--chartreuse);line-height:1;
+}
+.hero-stat-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.15rem}
+
+@media(max-width:800px){
+  body{overflow-x:hidden}
+  .hero-grid{grid-template-columns:1fr}
+  .hero-right{display:none}
+  #hero{min-height:auto}
+  .hero-left{padding-bottom:2.5rem}
+  .hero-actions{align-items:stretch;flex-direction:column}
+  .hero-actions a{width:100%;text-align:center}
+  .nav-cta{display:none!important}
+}
+
+/* ── Section shared ───────────────────────────────────────────────── */
+.section{padding:clamp(4rem,8vh,7rem) 0}
+.section-header{margin-bottom:clamp(2rem,4vw,4rem)}
+.section-tag{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.section-num{
+  font-family:var(--font-mono);font-size:.7rem;color:var(--muted);
+  width:2.2rem;text-align:right;
+}
+.section-label-text{font-family:var(--font-stack);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* ── Solutions primary ────────────────────────────────────────────── */
+#solutions{background:var(--near-black)}
+.solution-card{
+  border:1px solid var(--rule);
+  background:var(--surface);
+  padding:clamp(1.5rem,3vw,2.5rem);
+  position:relative;
+  display:flex;flex-direction:column;
+}
+.solution-card.primary{
+  border-color:var(--chartreuse);
+  grid-column:1/3;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(1.5rem,3vw,3rem);
+  align-items:start;
+}
+@media(max-width:860px){
+  .solution-card.primary{grid-column:auto;grid-template-columns:1fr}
+}
+.card-index{
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;color:var(--chartreuse);
+  margin-bottom:1rem;
+}
+.card-icon{
+  width:2.5rem;height:2.5rem;margin-bottom:1.2rem;
+  color:var(--chartreuse);
+}
+.card-icon.secondary-icon{color:var(--yellow);width:2rem;height:2rem}
+.card-title{
+  font-family:var(--font-stack);font-weight:900;
+  font-size:clamp(1.4rem,2.5vw,2rem);letter-spacing:-.02em;text-transform:uppercase;
+  color:var(--white);margin-bottom:.6rem;line-height:1;
+}
+.card-body{color:var(--text);font-size:.95rem;line-height:1.6;max-width:50ch}
+.card-body p{margin-bottom:.8rem}
+.card-body p:last-child{margin-bottom:0}
+.primary-badge{
+  position:absolute;top:-1px;right:-1px;
+  background:var(--chartreuse);color:var(--black);
+  font-family:var(--font-stack);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:900;
+  padding:.25rem .6rem;
+}
+.card-right{display:flex;flex-direction:column;justify-content:space-between}
+.card-detail-list{list-style:none;margin-top:1.5rem}
+.card-detail-list li{
+  display:flex;align-items:flex-start;gap:.7rem;
+  padding:.65rem 0;border-top:1px solid var(--rule);
+  font-size:.9rem;color:var(--text);line-height:1.4;
+}
+.check{color:var(--chartreuse);flex-shrink:0;margin-top:.1rem}
+.solutions-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(1rem,2vw,2rem);
+}
+@media(max-width:860px){.solutions-grid{grid-template-columns:1fr}}
+
+/* ── Comparison ───────────────────────────────────────────────────── */
+#compare{background:var(--surface2)}
+.comparison-header{
+  display:grid;grid-template-columns:minmax(0,1.25fr) minmax(18rem,.75fr);
+  gap:clamp(2rem,5vw,5rem);align-items:end;margin-bottom:clamp(2rem,4vw,3.5rem);
+}
+.comparison-intro{max-width:68ch;color:var(--text);font-size:1rem;line-height:1.7}
+.comparison-note{
+  border-left:2px solid var(--chartreuse);background:var(--near-black);
+  padding:1.1rem 1.25rem;color:var(--muted);font-family:var(--font-mono);
+  font-size:.76rem;line-height:1.65;
+}
+.comparison-note strong{color:var(--white)}
+.comparison-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);
+}
+.comparison-card{
+  min-width:0;background:var(--surface);padding:clamp(1.35rem,2.5vw,2rem);
+  display:flex;flex-direction:column;
+}
+.comparison-card.featured{position:relative;background:var(--black);box-shadow:inset 0 3px 0 var(--chartreuse)}
+.comparison-card.featured::before{
+  content:'SunChill focus';position:absolute;top:0;right:0;
+  background:var(--chartreuse);color:var(--black);padding:.3rem .55rem;
+  font-family:var(--font-stack);font-size:.58rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;
+}
+.comparison-kicker{
+  margin-bottom:1rem;color:var(--chartreuse);font-family:var(--font-mono);
+  font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
+}
+.comparison-card:not(.featured) .comparison-kicker{color:var(--yellow)}
+.comparison-title{
+  min-height:3.5rem;margin-bottom:.8rem;color:var(--white);font-family:var(--font-stack);
+  font-size:clamp(1.25rem,2vw,1.65rem);font-weight:900;letter-spacing:-.02em;line-height:1;text-transform:uppercase;
+}
+.comparison-summary{min-height:8.5rem;color:var(--text);font-size:.9rem;line-height:1.6}
+.comparison-list{margin-top:1.4rem;border-top:1px solid var(--rule)}
+.comparison-item{padding:1rem 0;border-bottom:1px solid var(--rule)}
+.comparison-item dt{
+  margin-bottom:.35rem;color:var(--white);font-family:var(--font-stack);
+  font-size:.68rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase;
+}
+.comparison-item dt::before{content:'→';margin-right:.45rem;color:var(--chartreuse)}
+.comparison-card:not(.featured) .comparison-item dt::before{color:var(--yellow)}
+.comparison-item dd{color:var(--muted);font-size:.82rem;line-height:1.6}
+.comparison-footnote{max-width:90ch;margin-top:1.5rem;color:var(--muted);font-family:var(--font-mono);font-size:.7rem;line-height:1.65}
+@media(max-width:960px){
+  .comparison-header{grid-template-columns:1fr}
+  .comparison-grid{grid-template-columns:1fr}
+  .comparison-title,.comparison-summary{min-height:0}
+}
+@media(max-width:560px){
+  .comparison-note{border-left:0;border-top:2px solid var(--chartreuse)}
+  .comparison-card{padding:1.25rem}
+}
+
+/* ── How it works ─────────────────────────────────────────────────── */
+#how{background:var(--black)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.steps::before{
+  content:'';
+  position:absolute;
+  top:2rem;left:0;right:0;height:1px;
+  background:var(--rule);
+  z-index:0;
+}
+@media(max-width:860px){
+  .steps{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .steps{grid-template-columns:1fr}
+  .steps::before{display:none}
+}
+.step{
+  position:relative;z-index:1;
+  padding:0 1.5rem 2rem 0;
+  border-right:1px solid var(--rule);
+}
+.step:last-child{border-right:none}
+@media(max-width:860px){
+  .step:nth-child(2){border-right:none}
+  .step:nth-child(3){border-right:1px solid var(--rule)}
+  .step{padding-right:1rem;padding-left:0}
+}
+@media(max-width:560px){
+  .step{border-right:none;border-bottom:1px solid var(--rule);padding:1.2rem 0}
+  .step:last-child{border-bottom:none}
+}
+.step-num{
+  width:4rem;height:4rem;background:var(--surface);
+  border:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:.85rem;letter-spacing:.1em;color:var(--chartreuse);
+  margin-bottom:1.5rem;
+}
+.step-title{
+  font-family:var(--font-stack);font-weight:900;font-size:1.1rem;letter-spacing:-.01em;text-transform:uppercase;
+  color:var(--white);margin-bottom:.5rem;
+}
+.step-text{font-size:.88rem;color:var(--muted);line-height:1.55;max-width:24ch}
+.caveat{
+  margin-top:2.5rem;
+  padding:1rem 1.5rem;
+  border-left:2px solid var(--rule);
+  font-size:.82rem;color:var(--muted);line-height:1.5;
+  font-family:var(--font-mono);
+}
+
+/* ── Benefits ─────────────────────────────────────────────────────── */
+#benefits{background:var(--surface)}
+.benefits-split{
+  display:grid;grid-template-columns:5fr 7fr;gap:clamp(2rem,5vw,5rem);align-items:start;
+}
+@media(max-width:860px){.benefits-split{grid-template-columns:1fr}}
+.benefits-left{}
+.benefits-headline{margin-bottom:1.5rem}
+.benefits-lead{color:var(--text);max-width:38ch;font-size:.95rem;line-height:1.65}
+.benefit-rows{}
+.benefit-row{
+  display:grid;grid-template-columns:auto 1fr;gap:1.2rem;
+  padding:1.5rem 0;border-bottom:1px solid var(--rule);
+  align-items:start;
+}
+.benefit-row:first-child{border-top:1px solid var(--rule)}
+.benefit-icon{
+  width:2.2rem;height:2.2rem;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.benefit-icon svg{width:1.4rem;height:1.4rem;color:var(--chartreuse)}
+.benefit-text-group{}
+.benefit-title{
+  font-family:var(--font-stack);font-weight:900;font-size:1rem;letter-spacing:-.01em;text-transform:uppercase;
+  color:var(--white);margin-bottom:.25rem;line-height:1;
+}
+.benefit-desc{font-size:.88rem;color:var(--muted);line-height:1.5}
+
+/* ── Trust ────────────────────────────────────────────────────────── */
+#trust{background:var(--near-black)}
+.trust-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--rule);border:1px solid var(--rule);
+}
+@media(max-width:700px){.trust-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.trust-grid{grid-template-columns:1fr}}
+.trust-cell{
+  background:var(--surface);
+  padding:clamp(1.2rem,3vw,2rem);
+}
+.trust-cell-num{
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;color:var(--muted);
+  margin-bottom:.8rem;
+}
+.trust-cell-heading{
+  font-family:var(--font-stack);font-weight:900;font-size:1.1rem;letter-spacing:-.01em;text-transform:uppercase;
+  color:var(--white);margin-bottom:.5rem;line-height:1.1;
+}
+.trust-cell-text{font-size:.85rem;color:var(--muted);line-height:1.55}
+
+/* ── FAQ ──────────────────────────────────────────────────────────── */
+#faq{background:var(--black)}
+.faq-list{margin-top:2rem;border-top:1px solid var(--rule)}
+.faq-list details{border-bottom:1px solid var(--rule)}
+.faq-list summary{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.3rem 0;
+  cursor:pointer;
+  font-family:var(--font-stack);font-weight:900;font-size:.95rem;letter-spacing:-.01em;text-transform:uppercase;
+  color:var(--white);
+  list-style:none;
+  gap:1rem;
+  -webkit-tap-highlight-color:transparent;
+}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list summary:focus-visible{outline:2px solid var(--chartreuse);outline-offset:2px;border-radius:2px}
+.faq-icon{
+  flex-shrink:0;width:1.4rem;height:1.4rem;
+  border:1px solid var(--rule);
+  display:grid;place-items:center;
+  color:var(--chartreuse);
+  transition:background var(--transition);
+}
+details[open] .faq-icon{background:var(--chartreuse);color:var(--black)}
+details[open] .faq-icon .minus{display:block}
+details[open] .faq-icon .plus{display:none}
+.faq-icon .minus{display:none}
+.faq-answer{
+  padding-bottom:1.5rem;
+  color:var(--text);font-size:.92rem;line-height:1.65;max-width:72ch;
+}
+.faq-answer p{margin-bottom:.7rem}
+.faq-answer p:last-child{margin-bottom:0}
+
+/* ── CTA ──────────────────────────────────────────────────────────── */
+#contact{background:var(--chartreuse);color:var(--black)}
+.cta-wrap{
+  padding:clamp(3rem,7vh,6rem) var(--gutter);
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;
+}
+@media(max-width:700px){.cta-wrap{grid-template-columns:1fr;gap:2rem}}
+.cta-headline{
+  font-family:var(--font-stack);font-weight:900;
+  font-size:clamp(2rem,5vw,4rem);letter-spacing:-.03em;text-transform:uppercase;
+  line-height:.95;color:var(--black);
+}
+.cta-sub{margin-top:.8rem;font-size:.95rem;color:rgba(0,0,0,0.7);max-width:46ch;line-height:1.55}
+.cta-action{}
+.cta-email{
+  font-family:var(--font-stack);font-weight:900;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--white);background:var(--black);
+  padding:1rem 2rem;text-decoration:none;display:inline-block;
+  transition:background var(--transition);
+}
+.cta-email:hover,.cta-email:focus-visible{background:var(--near-black)}
+.cta-note{font-size:.72rem;color:rgba(0,0,0,0.55);margin-top:.7rem;line-height:1.5;font-family:var(--font-mono)}
+
+/* ── Footer ───────────────────────────────────────────────────────── */
+footer{
+  background:var(--near-black);
+  border-top:1px solid var(--rule);
+  padding:1.8rem var(--gutter);
+}
+.footer-inner{
+  max-width:var(--max);margin:0 auto;
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+  gap:1rem;
+}
+.footer-logo{
+  font-family:var(--font-stack);font-weight:900;font-size:.95rem;letter-spacing:-.01em;
+  text-transform:uppercase;color:var(--white);text-decoration:none;
+}
+.footer-logo span{color:var(--chartreuse)}
+.footer-legal{font-size:.72rem;color:var(--muted);max-width:55ch;line-height:1.5}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- NAV ──────────────────────────────────────────────────────────── -->
+<nav aria-label="Site navigation">
+  <div class="nav-inner">
+    <a class="logo" href="#hero" aria-label="SunChill Solar — home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M8 1L9.5 6H14.5L10.5 9L12 14L8 11L4 14L5.5 9L1.5 6H6.5L8 1Z" fill="#0a0a0a"/>
+        </svg>
+      </span>
+      Sun<span>Chill</span> Solar
+    </a>
+    <a class="nav-cta" href="#contact">Talk to us</a>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- HERO ─────────────────────────────────────────────────────────── -->
+<section id="hero" aria-labelledby="hero-heading">
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="hero-num" aria-hidden="true">SC–01</span>
+        <span class="label muted">Residential Solar Resilience</span>
+      </div>
+      <h1 id="hero-heading" class="display hero-headline">
+        Resilience<br>starts<br><em>cold.</em>
+      </h1>
+      <p class="hero-sub">
+        SunChill explores household essential-load resilience with a clear first priority:
+        refrigerator backup power and solar offset. Internet and media-center loads come second.
+      </p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#solutions">See how it works</a>
+        <a class="btn-ghost" href="#compare">Compare approaches</a>
+      </div>
+    </div>
+    <div class="hero-right" aria-hidden="true">
+      <div class="hero-diagram">
+        <p class="diagram-label">Load resilience overview</p>
+        <div class="diag-svg-wrap">
+          <svg viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <!-- Solar panels -->
+            <rect x="10" y="20" width="70" height="44" rx="2" fill="#1e1e1e" stroke="#c8ff00" stroke-width="1.5"/>
+            <line x1="10" y1="42" x2="80" y2="42" stroke="#c8ff00" stroke-width=".75" opacity=".5"/>
+            <line x1="45" y1="20" x2="45" y2="64" stroke="#c8ff00" stroke-width=".75" opacity=".5"/>
+            <rect x="88" y="20" width="70" height="44" rx="2" fill="#1e1e1e" stroke="#c8ff00" stroke-width="1.5"/>
+            <line x1="88" y1="42" x2="158" y2="42" stroke="#c8ff00" stroke-width=".75" opacity=".5"/>
+            <line x1="123" y1="20" x2="123" y2="64" stroke="#c8ff00" stroke-width=".75" opacity=".5"/>
+            <text x="45" y="90" text-anchor="middle" fill="#888" font-size="9" font-family="Courier New, monospace" letter-spacing="1">SOLAR ARRAY</text>
+
+            <!-- Arrow down to battery -->
+            <line x1="84" y1="96" x2="84" y2="136" stroke="#2a2a2a" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <polygon points="84,140 80,132 88,132" fill="#2a2a2a"/>
+
+            <!-- Battery -->
+            <rect x="34" y="140" width="100" height="60" rx="3" fill="#161616" stroke="#c8ff00" stroke-width="1.5"/>
+            <rect x="134" y="157" width="8" height="26" rx="1" fill="#c8ff00"/>
+            <rect x="46" y="152" width="72" height="36" rx="2" fill="#1e1e1e"/>
+            <!-- battery fill bar -->
+            <rect x="48" y="154" width="52" height="32" rx="1" fill="#c8ff00" opacity=".25"/>
+            <text x="84" y="210" text-anchor="middle" fill="#888" font-size="9" font-family="Courier New, monospace" letter-spacing="1">STORAGE</text>
+
+            <!-- Arrow right to loads -->
+            <line x1="144" y1="170" x2="200" y2="170" stroke="#2a2a2a" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <polygon points="204,170 196,166 196,174" fill="#2a2a2a"/>
+
+            <!-- Load: fridge (primary) -->
+            <rect x="205" y="120" width="80" height="100" rx="3" fill="#1e1e1e" stroke="#c8ff00" stroke-width="2"/>
+            <rect x="205" y="120" width="80" height="38" rx="3" fill="#1a1a1a" stroke="#c8ff00" stroke-width="2"/>
+            <circle cx="278" cy="140" r="4" fill="#c8ff00"/>
+            <line x1="205" y1="158" x2="285" y2="158" stroke="#c8ff00" stroke-width=".75" opacity=".4"/>
+            <text x="245" y="185" text-anchor="middle" fill="#e8e8e0" font-size="9" font-family="Arial Black, Arial, sans-serif" font-weight="900" letter-spacing=".5">FRIDGE</text>
+            <text x="245" y="198" text-anchor="middle" fill="#c8ff00" font-size="7.5" font-family="Courier New, monospace" letter-spacing="1">PRIMARY</text>
+
+            <!-- Arrow right to secondary loads -->
+            <line x1="285" y1="170" x2="310" y2="170" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="3,3"/>
+            <polygon points="313,170 307,167 307,173" fill="#2a2a2a"/>
+
+            <!-- Load: router (secondary) -->
+            <rect x="314" y="138" width="66" height="40" rx="2" fill="#161616" stroke="#444" stroke-width="1"/>
+            <text x="347" y="157" text-anchor="middle" fill="#888" font-size="8" font-family="Arial Black, Arial, sans-serif" font-weight="900" letter-spacing=".5">ROUTER</text>
+            <text x="347" y="169" text-anchor="middle" fill="#ffe600" font-size="7" font-family="Courier New, monospace" letter-spacing=".5">2NDRY</text>
+
+            <!-- Load: media (secondary) -->
+            <rect x="314" y="188" width="66" height="40" rx="2" fill="#161616" stroke="#444" stroke-width="1"/>
+            <text x="347" y="207" text-anchor="middle" fill="#888" font-size="8" font-family="Arial Black, Arial, sans-serif" font-weight="900" letter-spacing=".5">MEDIA</text>
+            <text x="347" y="219" text-anchor="middle" fill="#ffe600" font-size="7" font-family="Courier New, monospace" letter-spacing=".5">2NDRY</text>
+
+            <!-- Grid connection (dashed, bottom) -->
+            <line x1="84" y1="210" x2="84" y2="258" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="3,3"/>
+            <rect x="44" y="258" width="80" height="38" rx="2" fill="#161616" stroke="#333" stroke-width="1"/>
+            <text x="84" y="275" text-anchor="middle" fill="#555" font-size="9" font-family="Courier New, monospace" letter-spacing="1">UTILITY</text>
+            <text x="84" y="288" text-anchor="middle" fill="#555" font-size="8" font-family="Courier New, monospace" letter-spacing="1">GRID</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-bar">
+    <div class="hero-bar-inner">
+      <div class="hero-stat">
+        <div class="hero-stat-num">01</div>
+        <div class="hero-stat-label">Primary load: refrigeration</div>
+      </div>
+      <div class="h-rule" style="width:1px;height:2.5rem;background:var(--rule)" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">02</div>
+        <div class="hero-stat-label">Secondary load: connectivity</div>
+      </div>
+      <div class="h-rule" style="width:1px;height:2.5rem;background:var(--rule)" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--yellow)">→</div>
+        <div class="hero-stat-label">Explore solar offset</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS ────────────────────────────────────────────────────── -->
+<section id="solutions" class="section" aria-labelledby="solutions-heading">
+  <div class="wrap">
+    <header class="section-header">
+      <div class="section-tag">
+        <span class="section-num" aria-hidden="true">02</span>
+        <span class="h-rule" style="width:1.5rem;background:var(--rule)" aria-hidden="true"></span>
+        <span class="section-label-text">What we offer</span>
+      </div>
+      <h2 id="solutions-heading" class="display-md">Two tiers.<br>One clear priority.</h2>
+    </header>
+
+    <div class="solutions-grid">
+      <!-- Primary card -->
+      <article class="solution-card primary" aria-label="Primary focus: refrigerator resilience">
+        <span class="primary-badge" aria-hidden="true">Primary</span>
+        <div>
+          <div class="card-index" aria-label="Item 01">01 ——</div>
+          <svg class="card-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="10" y="6" width="28" height="36" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="10" y="6" width="28" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+            <circle cx="34" cy="14" r="2.5" fill="currentColor"/>
+            <line x1="10" y1="26" x2="38" y2="26" stroke="currentColor" stroke-width="1" opacity=".4"/>
+          </svg>
+          <h3 class="card-title">Refrigerator<br>resilience</h3>
+          <div class="card-body">
+            <p>Refrigeration protects a household essential and represents a recurring part of everyday electricity use.</p>
+            <p>SunChill explores backup power and solar offset around that priority first.</p>
+          </div>
+        </div>
+        <div class="card-right">
+          <ul class="card-detail-list" aria-label="Primary offer details">
+            <li>
+              <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <polyline points="2,8 6,12 14,4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Refrigerator and freezer loads considered first
+            </li>
+            <li>
+              <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <polyline points="2,8 6,12 14,4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Solar contribution considered as a possible grid offset
+            </li>
+            <li>
+              <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <polyline points="2,8 6,12 14,4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Essential-load boundaries kept intentionally narrow
+            </li>
+            <li>
+              <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <polyline points="2,8 6,12 14,4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Household context and conditions treated as open questions
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Secondary card 1 -->
+      <article class="solution-card" aria-label="Secondary offer: internet and connectivity">
+        <div class="card-index" aria-label="Item 02">02 ——</div>
+        <svg class="card-icon secondary-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M8 22C13.5 16 20.5 13 24 13C27.5 13 34.5 16 40 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M14 28C17.5 24.5 21 23 24 23C27 23 30.5 24.5 34 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="24" cy="34" r="3" fill="currentColor"/>
+        </svg>
+        <h3 class="card-title">Internet &amp;<br>connectivity</h3>
+        <div class="card-body">
+          <p>Internet equipment is a secondary resilience focus. The concept considers its backup-power needs only after the refrigerator priority has been addressed.</p>
+        </div>
+      </article>
+
+      <!-- Secondary card 2 -->
+      <article class="solution-card" aria-label="Secondary offer: media center backup">
+        <div class="card-index" aria-label="Item 03">03 ——</div>
+        <svg class="card-icon secondary-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="6" y="14" width="36" height="22" rx="2" stroke="currentColor" stroke-width="2"/>
+          <line x1="14" y1="40" x2="34" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="24" y1="36" x2="24" y2="40" stroke="currentColor" stroke-width="2"/>
+          <circle cx="24" cy="25" r="4" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <h3 class="card-title">Media center<br>backup</h3>
+        <div class="card-body">
+          <p>Media-center loads sit alongside internet equipment as a secondary focus, with backup power and potential solar offset considered after refrigeration.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="h-rule" role="separator" aria-hidden="true"></div>
+
+<!-- COMPARISON ───────────────────────────────────────────────────── -->
+<section id="compare" class="section" aria-labelledby="compare-heading">
+  <div class="wrap">
+    <div class="comparison-header">
+      <header class="section-header" style="margin-bottom:0">
+        <div class="section-tag">
+          <span class="section-num" aria-hidden="true">03</span>
+          <span class="h-rule" style="width:1.5rem;background:var(--rule)" aria-hidden="true"></span>
+          <span class="section-label-text">Compare the scope</span>
+        </div>
+        <h2 id="compare-heading" class="display-md">Not every household<br>needs whole-home backup.</h2>
+        <p class="comparison-intro" style="margin-top:1.5rem">A focused approach starts with priority loads—especially refrigeration—and can also consider internet and media-center equipment. Traditional residential solar is primarily a generation and offset conversation; outage resilience depends on a configuration designed to operate safely when grid power is unavailable. The right scope depends on the home, the loads, the site, the equipment, and the local requirements.</p>
+      </header>
+      <p class="comparison-note"><strong>Scope first:</strong> these are directional differences, not universal cost, timing, or portability claims. Each household and project needs its own review.</p>
+    </div>
+
+    <div class="comparison-grid" role="list" aria-label="Comparison of residential energy approaches">
+      <article class="comparison-card featured" role="listitem">
+        <p class="comparison-kicker">Focused priority loads</p>
+        <h3 class="comparison-title">SunChill household resilience</h3>
+        <p class="comparison-summary">A focused resilience approach for the loads a household cares about most, with refrigeration first and solar support considered alongside backup priorities.</p>
+        <dl class="comparison-list">
+          <div class="comparison-item">
+            <dt>Financial review</dt>
+            <dd>By focusing on priority loads, the concept explores a different scope than whole-home backup. Any cost comparison requires like-for-like quotes and project details.</dd>
+          </div>
+          <div class="comparison-item">
+            <dt>Relocation</dt>
+            <dd>A portable-minded approach may be easier to relocate than a permanently integrated system; a new location still needs its own fit and code review.</dd>
+          </div>
+          <div class="comparison-item">
+            <dt>Project path</dt>
+            <dd>The concept is designed to keep the scope focused—not to skip the steps that make a household energy system safe.</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="comparison-card" role="listitem">
+        <p class="comparison-kicker">Broader electrical scope</p>
+        <h3 class="comparison-title">Whole-home battery backup</h3>
+        <p class="comparison-summary">Whole-home backup covers a broader set of household circuits and may involve transfer equipment, service-panel work, and a larger integrated project scope.</p>
+        <dl class="comparison-list">
+          <div class="comparison-item">
+            <dt>Financial review</dt>
+            <dd>Broader load coverage and electrical integration create a different project scope. Cost and value depend on equipment, labor, permits, site conditions, and other project details.</dd>
+          </div>
+          <div class="comparison-item">
+            <dt>Relocation</dt>
+            <dd>Permanently mounted or electrically integrated equipment is generally tied more closely to the property than equipment designed for relocation.</dd>
+          </div>
+          <div class="comparison-item">
+            <dt>Project path</dt>
+            <dd>Design, electrical work, permits, inspections, and on-site coordination vary by the home, system, contractor, and jurisdiction.</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="comparison-card" role="listitem">
+        <p class="comparison-kicker">Generation and offset</p>
+        <h3 class="comparison-title">Traditional residential solar</h3>
+        <p class="comparison-summary">Traditional residential solar primarily addresses generation and grid offset. Solar offset and outage backup are different jobs, and resilience requires a configuration designed for grid outages.</p>
+        <dl class="comparison-list">
+          <div class="comparison-item">
+            <dt>Financial review</dt>
+            <dd>Bill impact, payback, and lifecycle cost vary with load, weather, orientation, shading, utility rules, equipment, and use.</dd>
+          </div>
+          <div class="comparison-item">
+            <dt>Relocation</dt>
+            <dd>Property-mounted solar is generally designed to remain with the site. Any move or reinstallation requires a new technical and local review.</dd>
+          </div>
+          <div class="comparison-item">
+            <dt>Project path</dt>
+            <dd>If solar PV is included, the applicable design, electrical, structural, permitting, and utility paths must be confirmed for the project location.</dd>
+          </div>
+        </dl>
+      </article>
+    </div>
+
+    <p class="comparison-footnote"><strong>Permitting and electrical requirements vary by configuration and location.</strong> If solar PV, fixed wiring, structural mounting, or interconnection is involved, the applicable review and permit path must be confirmed before work begins. No performance, savings, installation-timing, or availability promise is made here.</p>
+  </div>
+</section>
+
+<div class="h-rule" role="separator" aria-hidden="true"></div>
+
+<!-- HOW IT WORKS ─────────────────────────────────────────────────── -->
+<section id="how" class="section" aria-labelledby="how-heading">
+  <div class="wrap">
+    <header class="section-header">
+      <div class="section-tag">
+        <span class="section-num" aria-hidden="true">04</span>
+        <span class="h-rule" style="width:1.5rem;background:var(--rule)" aria-hidden="true"></span>
+        <span class="section-label-text">How it works</span>
+      </div>
+      <h2 id="how-heading" class="display-md">A conceptual<br>flow.</h2>
+    </header>
+
+    <div class="steps" role="list">
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">01</div>
+        <h3 class="step-title">Consider sunlight</h3>
+        <p class="step-text">Start with the household's sunlight context and the possibility of using solar energy for essential loads.</p>
+      </div>
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">02</div>
+        <h3 class="step-title">Consider backup</h3>
+        <p class="step-text">Explore how stored energy could support refrigeration when sunlight is limited or the grid is disrupted.</p>
+      </div>
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">03</div>
+        <h3 class="step-title">Set priorities</h3>
+        <p class="step-text">Keep refrigeration primary, then consider internet and media-center loads within a deliberately limited scope.</p>
+      </div>
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">04</div>
+        <h3 class="step-title">Review offset</h3>
+        <p class="step-text">Examine whether solar contribution could offset some grid draw associated with the prioritized loads.</p>
+      </div>
+    </div>
+
+    <p class="caveat">
+      This is a conceptual framework, not a performance claim. Household conditions, energy use,
+      sunlight, and outage circumstances all require thoughtful review.
+    </p>
+  </div>
+</section>
+
+<div class="h-rule" role="separator" aria-hidden="true"></div>
+
+<!-- BENEFITS ─────────────────────────────────────────────────────── -->
+<section id="benefits" class="section" aria-labelledby="benefits-heading">
+  <div class="wrap">
+    <div class="benefits-split">
+      <div class="benefits-left">
+        <div class="section-tag">
+          <span class="section-num" aria-hidden="true">05</span>
+          <span class="h-rule" style="width:1.5rem;background:var(--rule)" aria-hidden="true"></span>
+          <span class="section-label-text">Benefits</span>
+        </div>
+        <h2 id="benefits-heading" class="display-md benefits-headline">Focused<br>thinking.</h2>
+        <p class="benefits-lead">A narrow essential-load approach can make resilience questions easier to examine. SunChill keeps refrigeration first and treats internet and media-center loads as secondary.</p>
+      </div>
+      <div class="benefit-rows" role="list">
+        <div class="benefit-row" role="listitem">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 2L15 9H22L16.5 13.5L18.5 21L12 17L5.5 21L7.5 13.5L2 9H9L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="benefit-text-group">
+            <h3 class="benefit-title">Food comes first</h3>
+            <p class="benefit-desc">Refrigerator and freezer loads anchor the resilience conversation.</p>
+          </div>
+        </div>
+        <div class="benefit-row" role="listitem">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 12.5C9.5 14 10.5 15 12 15C13.5 15 14.5 14 16 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M9 9.5H9.01M15 9.5H15.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="benefit-text-group">
+            <h3 class="benefit-title">Connection comes second</h3>
+            <p class="benefit-desc">Internet and media-center loads are considered only after refrigeration.</p>
+          </div>
+        </div>
+        <div class="benefit-row" role="listitem">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M3 10H21" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="8" cy="14" r="1.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="benefit-text-group">
+            <h3 class="benefit-title">Explore solar offset</h3>
+            <p class="benefit-desc">Solar contribution is considered as one possible way to offset some grid draw.</p>
+          </div>
+        </div>
+        <div class="benefit-row" role="listitem">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 3V5M18.36 5.64L16.95 7.05M21 12H19M18.36 18.36L16.95 16.95M12 19V21M7.05 16.95L5.64 18.36M5 12H3M7.05 7.05L5.64 5.64" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="benefit-text-group">
+            <h3 class="benefit-title">Keep scope clear</h3>
+            <p class="benefit-desc">The concept separates primary and secondary loads rather than implying whole-home coverage.</p>
+          </div>
+        </div>
+        <div class="benefit-row" role="listitem">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M3 9L12 2L21 9V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="benefit-text-group">
+            <h3 class="benefit-title">Review the household</h3>
+            <p class="benefit-desc">Energy use, sunlight, outage context, and priorities are questions to understand before drawing conclusions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="h-rule" role="separator" aria-hidden="true"></div>
+
+<!-- TRUST / READINESS ────────────────────────────────────────────── -->
+<section id="trust" class="section" aria-labelledby="trust-heading">
+  <div class="wrap">
+    <header class="section-header">
+      <div class="section-tag">
+        <span class="section-num" aria-hidden="true">06</span>
+        <span class="h-rule" style="width:1.5rem;background:var(--rule)" aria-hidden="true"></span>
+        <span class="section-label-text">Readiness</span>
+      </div>
+      <h2 id="trust-heading" class="display-md">Clear about<br>the edges.</h2>
+    </header>
+
+    <div class="trust-grid" role="list">
+      <div class="trust-cell" role="listitem">
+        <div class="trust-cell-num" aria-hidden="true">T–01</div>
+        <h3 class="trust-cell-heading">Household<br>context</h3>
+        <p class="trust-cell-text">Sunlight, energy use, outage concerns, and load priorities can differ by household. Those differences should be understood rather than assumed.</p>
+      </div>
+      <div class="trust-cell" role="listitem">
+        <div class="trust-cell-num" aria-hidden="true">T–02</div>
+        <h3 class="trust-cell-heading">Priority<br>discipline</h3>
+        <p class="trust-cell-text">Refrigeration remains the primary focus. Internet and media-center loads remain secondary, keeping the concept easy to understand.</p>
+      </div>
+      <div class="trust-cell" role="listitem">
+        <div class="trust-cell-num" aria-hidden="true">T–03</div>
+        <h3 class="trust-cell-heading">Conceptual<br>boundaries</h3>
+        <p class="trust-cell-text">The approach does not imply whole-home coverage or a particular outcome. It frames a narrower resilience question for thoughtful review.</p>
+      </div>
+      <div class="trust-cell" role="listitem">
+        <div class="trust-cell-num" aria-hidden="true">T–04</div>
+        <h3 class="trust-cell-heading">Cautious<br>language</h3>
+        <p class="trust-cell-text">Backup power and solar offset are areas of exploration, not stated outcomes. The language stays conditional where facts are not yet established.</p>
+      </div>
+      <div class="trust-cell" role="listitem">
+        <div class="trust-cell-num" aria-hidden="true">T–05</div>
+        <h3 class="trust-cell-heading">Thoughtful<br>review</h3>
+        <p class="trust-cell-text">Relevant household details should be considered before deciding what conclusions, if any, can be drawn about the approach.</p>
+      </div>
+      <div class="trust-cell" role="listitem">
+        <div class="trust-cell-num" aria-hidden="true">T–06</div>
+        <h3 class="trust-cell-heading">Open<br>conversation</h3>
+        <p class="trust-cell-text">Questions are welcome by email. A conversation is simply a way to exchange context, with no form and no expectation to proceed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="h-rule" role="separator" aria-hidden="true"></div>
+
+<!-- FAQ ──────────────────────────────────────────────────────────── -->
+<section id="faq" class="section" aria-labelledby="faq-heading">
+  <div class="wrap">
+    <header class="section-header">
+      <div class="section-tag">
+        <span class="section-num" aria-hidden="true">07</span>
+        <span class="h-rule" style="width:1.5rem;background:var(--rule)" aria-hidden="true"></span>
+        <span class="section-label-text">Questions</span>
+      </div>
+      <h2 id="faq-heading" class="display-md">Careful<br>answers.</h2>
+    </header>
+
+    <div class="faq-list" role="list">
+
+      <details role="listitem">
+        <summary>
+          What is SunChill exploring?
+          <span class="faq-icon" aria-hidden="true">
+            <svg class="plus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="6" y1="2" x2="6" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="minus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>SunChill is exploring a household essential-load resilience approach centered on refrigerator backup power and solar offset.</p>
+          <p>Internet and media-center backup and offset are secondary areas of focus.</p>
+        </div>
+      </details>
+
+      <details role="listitem">
+        <summary>
+          Is this a whole-home concept?
+          <span class="faq-icon" aria-hidden="true">
+            <svg class="plus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="6" y1="2" x2="6" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="minus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>No. The exploration is intentionally limited to selected household loads rather than the whole home.</p>
+          <p>Refrigeration is primary; internet and media-center loads are secondary.</p>
+        </div>
+      </details>
+
+      <details role="listitem">
+        <summary>
+          Does solar offset mean a specific bill result?
+          <span class="faq-icon" aria-hidden="true">
+            <svg class="plus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="6" y1="2" x2="6" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="minus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>No. Solar offset describes a direction to explore, not a prediction about a household bill.</p>
+          <p>Sunlight and energy-use patterns vary, so this page makes no financial claim.</p>
+        </div>
+      </details>
+
+      <details role="listitem">
+        <summary>
+          What does “backup power” mean here?
+          <span class="faq-icon" aria-hidden="true">
+            <svg class="plus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="6" y1="2" x2="6" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="minus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>It refers to exploring stored energy as support for selected loads when the grid is disrupted.</p>
+          <p>The phrase does not state continuous operation or a particular outcome.</p>
+        </div>
+      </details>
+
+      <details role="listitem">
+        <summary>
+          What household details matter to the discussion?
+          <span class="faq-icon" aria-hidden="true">
+            <svg class="plus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="6" y1="2" x2="6" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="minus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>Useful context can include refrigerator energy use, which secondary loads matter to you, local sunlight, and the kinds of grid disruptions you are thinking about.</p>
+          <p>Sharing context starts a conversation; it does not establish a conclusion.</p>
+        </div>
+      </details>
+
+      <details role="listitem">
+        <summary>
+          What is not being claimed?
+          <span class="faq-icon" aria-hidden="true">
+            <svg class="plus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="6" y1="2" x2="6" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="minus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>This page does not claim a particular outcome, continuous power, a financial result, or whole-home coverage.</p>
+          <p>It presents a focused idea and the boundaries around it.</p>
+        </div>
+      </details>
+
+      <details role="listitem">
+        <summary>
+          What happens when I email?
+          <span class="faq-icon" aria-hidden="true">
+            <svg class="plus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="6" y1="2" x2="6" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <svg class="minus" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-answer">
+          <p>You can share a question or a little household context. The purpose is simply to exchange information about the idea.</p>
+          <p>You do not need to fill out a form or make any decision.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA ──────────────────────────────────────────────────────────── -->
+<section id="contact" aria-labelledby="cta-heading">
+  <div class="cta-wrap">
+    <div>
+      <h2 id="cta-heading" class="cta-headline">Curious?<br>Say hello.</h2>
+      <p class="cta-sub">Email a question or share what household resilience means to you. This is a simple exchange of information about the approach.</p>
+    </div>
+    <div class="cta-action">
+      <a class="cta-email" href="mailto:hello@sunchillsolar.com?subject=Question%20about%20SunChill%20Solar">Send an email</a>
+      <p class="cta-note">No form to complete.<br>Just an open invitation to ask a question.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER ───────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <a class="footer-logo" href="#hero" aria-label="SunChill Solar — back to top">Sun<span>Chill</span> Solar</a>
+    <p class="footer-legal">SunChill Solar is exploring a household essential-load resilience approach. This page describes a concept and its boundaries; it does not state a particular outcome. &copy; SunChill Solar.</p>
+  </div>
+</footer>
+
+<script>
+// Smooth-scroll polyfill for nav anchor clicks on browsers without scroll-behavior support
+document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+  anchor.addEventListener('click', function(e) {
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
